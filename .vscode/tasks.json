@@ -1,0 +1,60 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build current ASM",
+      "type": "shell",
+      "command": "build32",
+      "args": [
+        "${fileBasename}"
+      ],
+      "options": {
+        "cwd": "${fileDirname}",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run current EXE",
+      "type": "shell",
+      "command": "run32",
+      "args": [
+        "${fileBasename}"
+      ],
+      "options": {
+        "cwd": "${fileDirname}",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build and Run current ASM",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Build current ASM",
+        "Run current EXE"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
