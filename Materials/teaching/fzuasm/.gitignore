@@ -1,5 +1,5 @@
-*.obj
-*.exe
-*.lst
-*.ilk
-*.pdb
+/*.obj
+/*.exe
+/*.lst
+/*.ilk
+/*.pdb
