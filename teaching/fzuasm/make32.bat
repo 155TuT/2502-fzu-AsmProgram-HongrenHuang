@@ -2,14 +2,26 @@ REM  make32.bat -  Batch file for assembling/linking 32-bit Assembly programs
 REM  Revised: 11/15/01
 
 @echo off
+setlocal
 cls
 
-REM The following three lines can be customized for your system:
-REM ********************************************BEGIN customize
-SET PATH=C:\Users\17169\Documents\MyWork\fzucourses\Majorcourse\2502-fzu-AsmProgram-HongrenHuang\Materials\teaching\fzuasm\bin
-SET INCLUDE=C:\Users\17169\Documents\MyWork\fzucourses\Majorcourse\2502-fzu-AsmProgram-HongrenHuang\Materials\teaching\fzuasm\include
-SET LIB=C:\Users\17169\Documents\MyWork\fzucourses\Majorcourse\2502-fzu-AsmProgram-HongrenHuang\Materials\teaching\fzuasm\lib
-REM ********************************************END customize
+set "SCRIPT_DIR=%~dp0"
+if "%SCRIPT_DIR:~-1%"=="\" set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
+
+if exist "%SCRIPT_DIR%\.env.local" (
+    for /f "usebackq eol=# tokens=1,* delims==" %%A in ("%SCRIPT_DIR%\.env.local") do (
+        if not "%%~A"=="" set "%%~A=%%~B"
+    )
+)
+
+if not defined FZUASM_ROOT set "FZUASM_ROOT=%SCRIPT_DIR%"
+if not defined FZUASM_BIN set "FZUASM_BIN=%FZUASM_ROOT%\bin"
+if not defined FZUASM_INCLUDE set "FZUASM_INCLUDE=%FZUASM_ROOT%\INCLUDE"
+if not defined FZUASM_LIB set "FZUASM_LIB=%FZUASM_ROOT%\LIB"
+
+set "PATH=%FZUASM_BIN%;%PATH%"
+set "INCLUDE=%FZUASM_INCLUDE%"
+set "LIB=%FZUASM_LIB%"
 
 ML -Zi -c -Fl -coff %1.asm
 if errorlevel 1 goto terminate
@@ -23,3 +35,4 @@ dir %1.*
 
 :terminate
 pause
+endlocal
