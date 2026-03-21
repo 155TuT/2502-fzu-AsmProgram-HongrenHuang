@@ -42,10 +42,10 @@ C:\asm32\
 
 ## 一些小工具
 
-在 `/tools` 中涵盖了两个小工具：
+在 `/self-learning/tools` 中涵盖了两个小工具：
 
-- `build32.exe` 对源代码*.asm进行编译
-- `run32.exe` 运行编译好的*.exe文件
+- `build32.cmd` 对源代码*.asm进行编译
+- `run32.cmd` 运行编译好的*.exe文件
 
 可 `cd test` 以尝试使用终端编译并运行其中的程序，也可以借助 `/.vscode/tasks.json` 对当前打开的 *.asm 文件使用 `ctrl+shift+b` 以自动编译运行，或 `ctrl+shift+p` 以手动选择任务执行
 
