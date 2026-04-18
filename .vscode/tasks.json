@@ -4,15 +4,18 @@
     {
       "label": "Build current ASM",
       "type": "shell",
-      "command": "build32",
+      "command": "& \"${workspaceFolder}\\teaching\\fzuasm\\make32.bat\"",
       "args": [
-        "${fileBasename}"
+        "${fileBasenameNoExtension}"
       ],
       "options": {
         "cwd": "${fileDirname}",
         "shell": {
-          "executable": "C:\\Windows\\System32\\cmd.exe",
-          "args": ["/d", "/c"]
+          "executable": "C:\\Users\\17169\\AppData\\Local\\Programs\\PowerShell\\7\\pwsh.exe",
+          "args": [
+            "-NoLogo",
+            "-Command"
+          ]
         }
       },
       "group": {
@@ -29,15 +32,18 @@
     {
       "label": "Run current EXE",
       "type": "shell",
-      "command": "run32",
+      "command": "& \"${workspaceFolder}\\self-learning\\tools\\run32.cmd\"",
       "args": [
         "${fileBasename}"
       ],
       "options": {
         "cwd": "${fileDirname}",
         "shell": {
-          "executable": "C:\\Windows\\System32\\cmd.exe",
-          "args": ["/d", "/c"]
+          "executable": "C:\\Users\\17169\\AppData\\Local\\Programs\\PowerShell\\7\\pwsh.exe",
+          "args": [
+            "-NoLogo",
+            "-Command"
+          ]
         }
       },
       "presentation": {

@@ -24,7 +24,7 @@ pushd "%DIR%"
 if /I "%EXT%"==".asm" (
     if not exist "%NAME%.exe" (
         echo [ERROR] Executable not found: "%DIR%%NAME%.exe"
-        echo [HINT] Build it first with: build32 "%ARG%"
+        echo [HINT] Build it first with: teaching\fzuasm\make32.bat "%NAME%"
         popd
         exit /b 1
     )
