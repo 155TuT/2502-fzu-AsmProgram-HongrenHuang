@@ -22,7 +22,7 @@ main PROC
     call WriteDec
     call Crlf
 
-    ; 提示用户依次输入 N 个有符号整数，并把它们顺序存入 TAB 数组。
+    ; 依次输入 N 个有符号整数，并把它们顺序存入 TAB 数组。
     mov edx, OFFSET promptTitle
     call WriteString
     call Crlf
@@ -31,8 +31,7 @@ main PROC
     mov esi, OFFSET TAB           ; ESI 指向当前要写入的数组元素
 
 ReadLoop:
-    ; ReadInt/WriteString 可能会改写寄存器，
-    ; 所以先把循环计数和当前数组指针压栈保护起来。
+    ; ReadInt/WriteString 可能会改写寄存器，先把循环计数和当前数组指针压栈保护起来。
     push ecx
     push esi
 
@@ -53,7 +52,7 @@ ReadLoop:
 
     ; 手工压栈传参。
     ; 压栈顺序从右到左，因此最后一个压栈的是第 1 个参数。
-    ;
+
     ; push LENGTHOF TAB  -> [EBP+20]，数组长度 n
     ; push OFFSET TAB    -> [EBP+16]，TAB 首地址
     ; push X             -> [EBP+12]，阈值 X 的值
@@ -64,8 +63,8 @@ ReadLoop:
     push OFFSET Min
     call ODMIN
 
-    ; 子程序返回后，Min 中保存的是“绝对值大于 X 的最小负奇数”。
-    ; 终端要求显示它的绝对值，因此若 Min 为负，要先取反。
+    ; 子程序返回后，Min 中保存的是“绝对值大于 X 的最小负奇数”
+    ; 终端要求显示它的绝对值，因此若 Min 为负，要先取反
     mov edx, OFFSET msgAbsMin
     call WriteString
 
@@ -75,7 +74,7 @@ ReadLoop:
     neg eax
 
 PrintAbs:
-    ; 此时 EAX 一定是非负数，直接按无符号十进制输出即可。
+    ; 此时 EAX 一定是非负数，直接按无符号十进制输出即可
     call WriteDec
     call Crlf
 
@@ -85,6 +84,9 @@ main ENDP
 ODMIN PROC
     push ebp
     mov ebp, esp
+    push ebx
+    push esi
+    push edi
 
     ; 进入子程序后通过 EBP+偏移量取参数：
     ; [EBP+8]  = Min 的地址
@@ -107,7 +109,7 @@ ODMIN PROC
 
 Again2:
     ; 取出当前数组元素到 EDX。
-    ; 后面的奇偶判断、正负判断和比较都围绕这个数进行。
+    ; EDX 始终保留“当前元素原值”，便于后面直接和 Min 比较大小。
     mov edx, DWORD PTR [esi]
 
     ; 先判断当前数是不是奇数。
@@ -117,33 +119,32 @@ Again2:
     je Next
 
     ; 再判断当前数是不是负数。
-    ; 对 32 位带符号整数来说，最高位是符号位：
-    ; 最高位为 1 表示负数，最高位为 0 表示非负数。
-    ; 若 ZF = 1，说明最高位与 80000000h 按位与后为 0，即当前数不是负数。
-    test edx, 80000000h
-    je Next
+    ; 若当前数 >= 0，说明它不是负数，不可能成为候选值。
+    cmp edx, 0
+    jge Next
 
     ; 走到这里，EDX 已经确定是一个负奇数。
-    ; 题目要求它的绝对值必须大于 X，所以先求绝对值。
-    neg edx
+    ; 用 EBX 保存它的绝对值，EDX 本身仍然保留原来的负数，
+    ; 这样后面既能和 X 比较绝对值，也能直接和 Min 比较大小。
+    mov ebx, edx
+    neg ebx
 
     ; 比较 |当前值| 和 X。
     ; 若 |当前值| <= X，则不满足条件，跳过当前元素。
-    cmp edx, eax
+    cmp ebx, eax
     jbe Next
 
-    ; 若 |当前值| > X，则再取反一次，把 EDX 恢复成原来的负数。
-    ; 这样后面才能正确比较“哪个负数更小”。
-    neg edx
+    ; 若 Min 目前仍为 0，说明这是第一个满足条件的负奇数，直接保存。
+    cmp DWORD PTR [edi], 0
+    je StoreMin
 
-    ; 这里不再额外设置 found 标志，而是直接利用 Min 的初值 0 来判断。
-    ; 因为 Min 的初值是 0，而任何满足条件的负数都一定小于 0，
-    ; 所以第一次找到符合条件的数时，必然会更新 Min。
-    ; 之后只有当新的负数更小（数值更负）时，才再次更新。
+    ; 否则继续比较“当前负奇数”和“已保存的 Min”谁更小。
+    ; 只有当前值更小（也就是数值更负）时，才更新 Min。
     cmp edx, DWORD PTR [edi]
     jge Next
 
-    ; 当前负奇数更小，用它覆盖原先的 Min。
+StoreMin:
+    ; 把当前满足条件的负奇数写回 Min。
     mov DWORD PTR [edi], edx
 
 Next:
@@ -153,6 +154,9 @@ Next:
     loop Again2
 
 Done:
+    pop edi
+    pop esi
+    pop ebx
     pop ebp
     ret 16
 ODMIN ENDP
