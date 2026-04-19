@@ -36,8 +36,6 @@ main PROC
     mov esi, 0                    ; ESI 作为偏移量，指向 DAT 中当前待写入的位置
 
 ReadLoop:
-    ; ReadInt/WriteString 可能会改写寄存器，
-    ; 因此先把循环计数和数组偏移压栈保护起来。
     push ecx
     push esi
     mov edx, OFFSET promptEach
@@ -46,7 +44,7 @@ ReadLoop:
     pop esi
     pop ecx
 
-    ; ReadInt 读入的是有符号整数，因此这里必须手工检查范围，
+    ; ReadInt 读入的是有符号整数，因此这里手工检查范围（irvine 中没找到 ReadDec 的方法）
     ; 只允许输入 0..65535 之间的值，才能安全存入 WORD 单元。
     cmp eax, 0
     jl InvalidInput

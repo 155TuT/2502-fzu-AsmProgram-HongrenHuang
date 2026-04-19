@@ -31,7 +31,6 @@ main PROC
     mov esi, OFFSET TAB           ; ESI 指向当前要写入的数组元素
 
 ReadLoop:
-    ; ReadInt/WriteString 可能会改写寄存器，先把循环计数和当前数组指针压栈保护起来。
     push ecx
     push esi
 
