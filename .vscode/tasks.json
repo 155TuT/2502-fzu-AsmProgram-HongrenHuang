@@ -28,39 +28,6 @@
         "clear": true
       },
       "problemMatcher": []
-    },
-    {
-      "label": "Run current EXE",
-      "type": "shell",
-      "command": "& \"${workspaceFolder}\\self-learning\\tools\\run32.cmd\"",
-      "args": [
-        "${fileBasename}"
-      ],
-      "options": {
-        "cwd": "${fileDirname}",
-        "shell": {
-          "executable": "C:\\Users\\17169\\AppData\\Local\\Programs\\PowerShell\\7\\pwsh.exe",
-          "args": [
-            "-NoLogo",
-            "-Command"
-          ]
-        }
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "clear": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Build and Run current ASM",
-      "dependsOrder": "sequence",
-      "dependsOn": [
-        "Build current ASM",
-        "Run current EXE"
-      ],
-      "problemMatcher": []
     }
   ]
 }
